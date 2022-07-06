@@ -1,0 +1,46 @@
+// ==UserScript==
+// @name quickscrolltopandbottom
+// @description quick scroll top n bottom
+// @version 0.1
+// @author Ulf3000
+// @license MIT
+// @include *
+// ==/UserScript==
+
+
+// super scroll -- 3 in 1 -- normals scroll on page, fast scroll on the right edge of the page (perfect for twitter and similar feeds),
+// scroll to top and bottom on scrollbar 
+
+
+
+(function () {
+    
+
+    // skip all iframes
+    //if (window.self != window.top) { return }
+
+    window.onwheel = function (e) {
+
+        console.log(e);
+        if (window.innerWidth - e.pageX < 20 || e.shiftKey == true || e.buttons == 1) { //right side of page by 80px or shiftKey+scroll or leftclick+scroll
+            e.preventDefault();
+            if (e.wheelDeltaY > 10) {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            if (e.wheelDeltaY < -10) {
+                window.scrollTo({ top: window.scrollMaxY, behavior: 'smooth' });
+            }
+
+        }
+        if (window.innerWidth - e.pageX < 100 && window.innerWidth - e.pageX > 20 || e.altKey == true || e.buttons == 2) {
+            e.preventDefault();
+            if (e.wheelDeltaY > 10) {
+                window.scrollTo({ top: window.scrollY - window.innerHeight + 100, behavior: 'smooth' });
+            }
+            if (e.wheelDeltaY < -10) {
+                window.scrollTo({ top: window.scrollY + window.innerHeight -100, behavior: 'smooth' });
+            }
+        }
+    }
+
+})();
