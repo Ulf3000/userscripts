@@ -1,29 +1,28 @@
 // ==UserScript==
-// @name quickscrolltopandbottom
-// @description quick scroll top n bottom
-// @version 0.1
+// @name SuperScroll
+// @description 3 in 1 scroll
+// @version 0.2
 // @author Ulf3000
 // @license MIT
 // @include *
 // ==/UserScript==
 
 
-// super scroll -- 3 in 1 -- normals scroll on page, fast scroll on the right edge of the page (perfect for twitter and similar feeds),
-// scroll to top and bottom on scrollbar 
+
 
 
 
 (function () {
-    
-
-    // skip all iframes
-    //if (window.self != window.top) { return }
 
     window.onwheel = function (e) {
 
-        console.log(e);
-        if (window.innerWidth - e.pageX < 20 || e.shiftKey == true || e.buttons == 1) { //right side of page by 80px or shiftKey+scroll or leftclick+scroll
+
+        let dPR = window.devicePixelRatio; // everything must be converted by pixel ratio
+
+        //scroll to the top and bottom of the screen
+        if (window.innerWidth - e.pageX < 20 / dPR || e.shiftKey == true || e.buttons == 1) { // scrollbar in firefox is 20px wide 
             e.preventDefault();
+            e.stopPropagation();
             if (e.wheelDeltaY > 10) {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
@@ -32,13 +31,16 @@
             }
 
         }
-        if (window.innerWidth - e.pageX < 100 && window.innerWidth - e.pageX > 20 || e.altKey == true || e.buttons == 2) {
+        // fast scrolling,  by 1 "window height" up and down
+        if (window.innerWidth - e.pageX < 100 / dPR && window.innerWidth - e.pageX > 20 / dPR || e.altKey == true || e.buttons == 2) { // 100 px wide strip for fast scrolling on right edge of document
             e.preventDefault();
+            e.stopPropagation();
+
             if (e.wheelDeltaY > 10) {
                 window.scrollTo({ top: window.scrollY - window.innerHeight + 100, behavior: 'smooth' });
             }
             if (e.wheelDeltaY < -10) {
-                window.scrollTo({ top: window.scrollY + window.innerHeight -100, behavior: 'smooth' });
+                window.scrollTo({ top: window.scrollY + window.innerHeight - 100, behavior: 'smooth' });
             }
         }
     }
